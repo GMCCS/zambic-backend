@@ -13,7 +13,11 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 mongoose
-  .connect("mongodb://localhost/zambic-backend", { useNewUrlParser: true })
+  .connect(process.env.MONGODB_URI, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
   .then(x => {
     console.log(
       `Connected to Mongo! Database name: "${x.connections[0].name}"`
@@ -95,11 +99,9 @@ app.use(function(req, res, err, next) {
   }
 });
 
-
 // const port = process.env.PORT || 4000;
 // app.listen(port, () => {
 //   console.log(`API is listening on port:${port}`)
 // })
-
 
 module.exports = app;
