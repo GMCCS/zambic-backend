@@ -1,0 +1,11 @@
+{
+  "/": "api doc",
+  "/signin": "create user",
+  "/login": "login",
+  "/logout": "logout",
+  "/volunteers": "get all posts",
+  "/volunteer/:volunteerId": "get/update/delete user",
+  "/feed/posts/create/:volunteerId": "create post",
+  "/feed/posts/by/:volunteerId": "get all posts by volunteer",
+  "/feed/post/:postId": "update/delete post"
+}
