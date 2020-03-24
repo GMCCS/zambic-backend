@@ -10,7 +10,8 @@ const {
   isOwner,
   updatePost,
   deletePost,
-  getDetails
+  getDetails,
+  photo
 } = require("../controllers/post");
 
 // authorization
@@ -44,7 +45,7 @@ router.post(
 
 // a logged in user is able to get posts by volunteer
 
-router.get("/posts/by/:volunteerId",requireLogin, postsByVolunteer);
+router.get("/posts/by/:volunteerId", requireLogin, postsByVolunteer);
 
 // PUT route => to update a specific post
 
@@ -57,7 +58,10 @@ router.delete("/post/:postId", requireLogin, isOwner, deletePost);
 // GET route => to get the details out of a post - Also, should be free ... or... might be a nice idea to get signups?
 // let's go with this idea for the beginning. Any details will need login before someone can actually check them
 
-router.get("/post/:postId", requireLogin, getDetails);
+router.get("/post/:postId", getDetails);
+
+// post photo
+router.get("/post/photo/:postId", photo);
 
 // app will execute volunteerByID 1st for any route containing the :volunteerId
 router.param("volunteerId", volunteerById);

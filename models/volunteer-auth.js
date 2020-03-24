@@ -6,7 +6,6 @@ const crypto = require("crypto");
 
 const { ObjectId } = mongoose.Schema;
 
-
 const volunteerSchema = new mongoose.Schema({
   firstName: { type: String, required: true, trim: true },
   lastName: { type: String, required: true, trim: true },
@@ -19,7 +18,15 @@ const volunteerSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  updated: Date
+  updated: Date,
+  photo: {
+    data: Buffer,
+    contentType: String
+  },
+  experiences: {
+    type: String,
+    trim: true
+  }
 });
 
 // Using virtual fields for hashing

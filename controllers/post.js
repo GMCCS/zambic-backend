@@ -32,7 +32,8 @@ exports.getPosts = (req, res, next) => {
     // getting all the posts by owner
     .populate("owner", "_id firstName lastName")
     // -> If i wanted to get the json response with only these variables
-    .select("_id title subtitle description country")
+    .select("_id title subtitle description continent createdAt")
+    .sort({ createdAt: -1 })
     .then(allThePosts => {
       res.json(allThePosts);
     })
@@ -86,20 +87,22 @@ exports.createPost = (req, res, next) => {
 
 // user gets the details of a Post
 
-exports.getDetails = (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(400).json({ message: "Specified id is not valid" });
-    return;
-  }
-
-  Post.findById(req.params.id)
-    .then(post => {
-      res.status(200).json(post);
-    })
-    .catch(error => {
-      res.json(error);
-    });
+exports.getDetails = (req, res) => {
+  return res.json(req.post);
 };
+//   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+//     res.status(400).json({ message: "Specified id is not valid" });
+//     return;
+//   }
+
+//   Post.findById(req.params.id)
+//     .then(post => {
+//       res.status(200).json(post);
+//     })
+//     .catch(error => {
+//       res.json(error);
+//     });
+// };
 
 // gets the posts by owner
 
@@ -138,17 +141,49 @@ exports.isOwner = (req, res, next) => {
 
 // volunteer does the post editing
 
+// exports.updatePost = (req, res, next) => {
+//   let post = req.post;
+//   post = _.extend(post, req.body);
+//   post.updated = Date.now();
+//   post.save(err => {
+//     if (err) {
+//       return res.status(400).json({
+//         error: err
+//       });
+//     }
+//     res.json(post);
+//   });
+// };
+
+// volunteer does the post editing
+
 exports.updatePost = (req, res, next) => {
-  let post = req.post;
-  post = _.extend(post, req.body);
-  post.updated = Date.now();
-  post.save(err => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.parse(req, (err, fields, files) => {
     if (err) {
       return res.status(400).json({
-        error: err
+        error: "Photo could not be uploaded!"
       });
     }
-    res.json(post);
+
+    let post = req.post;
+    post = _.extend(post, fields);
+    post.updated = Date.now();
+
+    // can also be checked on network. gets us the photo + data
+    if (files.photo) {
+      post.photo.data = fs.readFileSync(files.photo.path);
+      post.photo.contentType = files.photo.type;
+    }
+    post.save((err, result) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      }
+      res.json(post);
+    });
   });
 };
 
@@ -167,4 +202,9 @@ exports.deletePost = (req, res) => {
       message: "Your post was removed successfully."
     });
   });
+};
+
+exports.photo = (req, res, next) => {
+  res.set("Content-Type", req.post.photo.contentType);
+  return res.send(req.post.photo.data);
 };

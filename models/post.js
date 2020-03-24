@@ -17,10 +17,20 @@ const postSchema = new mongoose.Schema(
       minlength: 20,
       maxlength: 3000
     },
-    country: { type: String, required: true},
-
-    tripDate: { type: Date },
-
+    continent: {
+      type: String,
+      required: true,
+      enum: [
+        "Africa",
+        "Asia",
+        "Europe",
+        "South America",
+        "North America",
+        "Oceania",
+        "Other"
+      ]
+    },
+    updated: Date,
     photo: { data: Buffer, contentType: String }, // contains image DATA and the type of content (jpeg,png,etc...)
 
     // builds the relationship of post with volunteer
@@ -30,7 +40,6 @@ const postSchema = new mongoose.Schema(
     },
     createdAt: { type: Date, default: Date.now }
   },
-
   {
     timestamps: true
   }

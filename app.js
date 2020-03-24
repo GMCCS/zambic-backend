@@ -1,11 +1,8 @@
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const express = require("express");
-// const favicon = require("serve-favicon");
-// const hbs = require("hbs");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
-// const path = require("path");
 const cors = require("cors");
 const expressValidator = require("express-validator");
 const fs = require("fs");
@@ -60,8 +57,10 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    credentials: true,
-    origin: ["http://localhost:3000"] // <== this will be the URL of our React app (it will be running on port 3000)
+    origin: [
+      "http://localhost:3000", // <== this will be the URL of our React app (it will be running on port 3000)
+      "http://zambicproject.s3-website.eu-west-2.amazonaws.com"
+    ]
   })
 );
 

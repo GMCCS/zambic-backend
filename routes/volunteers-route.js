@@ -6,7 +6,8 @@ const {
   getVolunteer,
   updateVolunteer,
   deleteVolunteer,
-  hasAuthorization
+  hasAuthorization,
+  vPhoto
 } = require("../controllers/volunteer");
 
 // call the requireLogin to only authorize logged in users to see a specific volunteer
@@ -38,6 +39,8 @@ router.delete(
   hasAuthorization,
   deleteVolunteer
 );
+
+router.get("/volunteer/photo/:volunteerId", vPhoto);
 
 // app will execute volunteerByID 1st for any route containing the :volunteerId
 router.param("volunteerId", volunteerById);
